@@ -9,7 +9,7 @@ WORKDIR /install
 
 COPY requirements.txt requirements.txt
 
-RUN pip install --install-option="--prefix=/install" -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 FROM base
 
