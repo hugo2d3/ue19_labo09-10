@@ -7,14 +7,16 @@ RUN apk add --no-cache python3 python3-dev py-pip build-base
 RUN mkdir /install/
 WORKDIR /install
 
-copy requirements.txt requirements.txt
-
+COPY requirements.txt requirements.txt
 
 RUN pip install --install-option="--prefix=/install" -r requirements.txt
 
-copy --from=builder /install /usr/local
-RUN mkdir /app/
+FROM base
 
-COPY app.py /app/app.py
+WORKDIR /app/
 
-CMD ["python", "/app/app.py"]
+COPY --from=builder /install /usr/local
+
+COPY numpyTest.py /app/numpyTest.py
+
+CMD ["python", "/app/numpyTest.py"]
