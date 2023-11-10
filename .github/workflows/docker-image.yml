@@ -16,10 +16,15 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Build an image from Dockerfile
+      run: |
+        dfocker build -t docker.io/my-organization/my-app:${{ github.sha }} .
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: '../Dockerfile'
+        image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
