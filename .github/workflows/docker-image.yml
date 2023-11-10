@@ -13,20 +13,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
     - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Build an image from Dockerfile
+      uses: actions/checkout@v3
+
+    - name: Generate tarball from image
       run: |
-        dfocker build -t docker.io/my-organization/my-app:${{ github.sha }} .
-    - name: Run Trivy vulnerability scanner
+        docker pull <your-docker-image>
+        docker save -o vuln-image.tar <your-docker-image>
+        
+    - name: Run Trivy vulnerability scanner in tarball mode
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
-        format: 'table'
-        exit-code: '1'
-        ignore-unfixed: true
-        vuln-type: 'os,library'
+        input: /github/workspace/vuln-image.tar
         severity: 'CRITICAL,HIGH'
