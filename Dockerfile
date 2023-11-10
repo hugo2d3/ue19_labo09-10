@@ -17,6 +17,6 @@ WORKDIR /app/
 
 COPY --from=builder /install /usr/local
 
-COPY numpyTest.py /app/numpyTest.py
+COPY app.py /app/app.py
 
-CMD ["python", "/app/numpyTest.py"]
+CMD ["python", "/app/app.py"]
